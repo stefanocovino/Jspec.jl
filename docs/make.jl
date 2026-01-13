@@ -1,14 +1,14 @@
-using JSPEC
+using Jspec
 using Documenter
 
-DocMeta.setdocmeta!(JSPEC, :DocTestSetup, :(using JSPEC); recursive=true)
+DocMeta.setdocmeta!(Jspec, :DocTestSetup, :(using Jspec); recursive=true)
 
 makedocs(;
-    modules=[JSPEC],
+         modules=[Jspec],
     authors="Stefano Covino <stefano.covino@inaf.it> and contributors",
-    sitename="JSPEC.jl",
+    sitename="Jspec.jl",
     format=Documenter.HTML(;
-        canonical="https://stefanocovino.github.io/JSPEC.jl",
+                           canonical="https://stefanocovino.github.io/Jspec.jl",
         edit_link="main",
         assets=String[],
     ),
@@ -18,6 +18,6 @@ makedocs(;
 )
 
 deploydocs(;
-    repo="github.com/stefanocovino/JSPEC.jl",
+           repo="github.com/stefanocovino/Jspec.jl",
     devbranch="main",
 )

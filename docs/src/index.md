@@ -1,14 +1,14 @@
 ```@meta
-CurrentModule = JSPEC
+CurrentModule = Jspec
 ```
 
-# JSPEC
+# Jspec
 
-Documentation for [JSPEC](https://github.com/stefanocovino/JSPEC.jl).
+Documentation for [Jspec](https://github.com/stefanocovino/Jspec.jl).
 
 ```@index
 ```
 
 ```@autodocs
-Modules = [JSPEC]
+Modules = [Jspec]
 ```
