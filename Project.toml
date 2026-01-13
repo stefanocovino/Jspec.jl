@@ -1,7 +1,7 @@
 name = "JSPEC"
 uuid = "799228a4-d83e-4675-bef0-fa04f023a533"
 authors = ["Stefano Covino <stefano.covino@inaf.it> and contributors"]
-version = "1.1.3"
+version = "1.2.0"
 
 [deps]
 CairoMakie = "13f3f980-e62b-5c42-98c6-ff1f3baf88f0"

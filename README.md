@@ -13,7 +13,15 @@ This is a package to allow to read and analyse spectra obtained from multi-chann
 using Pkg
 Pkg.add(url="https://github.com/stefanocovino/JSPEC.jl.git")
 ```
-will install this package.
+
+or just
+
+```julia
+using Pkg
+Pkg.add("JSPEC")
+```
+
+will install this package, with the latter enabled once the package is registered.
 
 
 ### Instruments
@@ -83,7 +91,7 @@ or:
 PlotRaw(Optdt,ylbl=L"Photons s$^{-1}$ cm$^{-2}$ keV$^{-1}$")
 ```
 
-Often, for multi-channel instruments, channels can (or need to be) ignored. This can be achieved with, e.g.:
+Often, for multi-channel instruments, channels can (or need to be) ignored. This can be achieved with, e.g. (please be aware that the first channels is the 0-channel, at variance with the julia convention):
 
 ```julia
 IgnoreChannels(XRTdt,[0:30,1000:2047])
@@ -149,4 +157,21 @@ modpreds = JSPECFunc(pars,[Optdt,XRTdt],MyModel)
 `JSPECFunc` with the right parameters can be used for any optimization problem or for any Baysian analysis involving sampling, etc.
 
 
+For instance, a [`Turing`](https://turinglang.org/) model might look like:
 
+```julia
+@model function SEDModel(f,ef)
+        lN ~ Uniform(-10., 10.)
+        β ~ Normal(-2.,2)
+        lNH ~ Uniform(log(1e17), log(1e22))
+        EBV ~ Uniform(0,2)
+        #
+        ris = JSPECFunc([exp(lN),β,exp(lNH),EBV],[Optdt,XRTdt],MyModel)
+        #
+        f ~ MvNormal(ris1,ef)
+    end
+
+model = SEDModel(obs,eobs);
+```
+
+And, having defined a model you can get the maximum likelihod, carry out a sampling, etc.
