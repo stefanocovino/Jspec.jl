@@ -1,8 +1,8 @@
-# JSPEC
+# Jspec
 
-[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://stefanocovino.github.io/JSPEC.jl/stable/)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://stefanocovino.github.io/JSPEC.jl/dev/)
-[![Build Status](https://github.com/stefanocovino/JSPEC.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stefanocovino/JSPEC.jl/actions/workflows/CI.yml?query=branch%3Amain)
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://stefanocovino.github.io/Jspec.jl/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://stefanocovino.github.io/Jspec.jl/dev/)
+[![Build Status](https://github.com/stefanocovino/Jspec.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stefanocovino/Jspec.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 This is a package to allow to read and analyse spectra obtained from multi-channel instruments (e.g., Swift-XRT) with data from any other source (e.g. optical/NIR observations). Altough several features are in common, no attempt to mimic the full funtionalities offered by [XSPEC](https://heasarc.gsfc.nasa.gov/xanadu/xspec/) was tried. In addition, at present, only fits with a Gaussian likelihood are implemented. Fits in a full Poissonian regime will possibly be included in a future version (or never...). 
 
@@ -11,14 +11,14 @@ This is a package to allow to read and analyse spectra obtained from multi-chann
 
 ```julia
 using Pkg
-Pkg.add(url="https://github.com/stefanocovino/JSPEC.jl.git")
+Pkg.add(url="https://github.com/stefanocovino/Jspec.jl.git")
 ```
 
 or just
 
 ```julia
 using Pkg
-Pkg.add("JSPEC")
+Pkg.add("Jspec")
 ```
 
 will install this package, with the latter enabled once the package is registered.
@@ -26,12 +26,12 @@ will install this package, with the latter enabled once the package is registere
 
 ### Instruments
 
-JSPEC currently handles data from [Swift-BAT](https://science.nasa.gov/mission/swift/), [Swift-XRT](https://science.nasa.gov/mission/swift/), [SVOM-MXT](https://www.svom.eu/en/the-svom-mission/), [NuSTAR-FPM](https://heasarc.gsfc.nasa.gov/docs/nustar/), [XMM-EMOS](https://www.cosmos.esa.int/web/xmm-newton) and [XMM-EPN](https://www.cosmos.esa.int/web/xmm-newton).
+Jspec currently handles data from [Swift-BAT](https://science.nasa.gov/mission/swift/), [Swift-XRT](https://science.nasa.gov/mission/swift/), [SVOM-MXT](https://www.svom.eu/en/the-svom-mission/), [NuSTAR-FPM](https://heasarc.gsfc.nasa.gov/docs/nustar/), [XMM-EMOS](https://www.cosmos.esa.int/web/xmm-newton) and [XMM-EPN](https://www.cosmos.esa.int/web/xmm-newton).
 
 
 ### Documentation and examples
 
-Documentation for the package can be found [here](https://stefanocovino.github.io/JSPEC.jl/stable/).
+Documentation for the package can be found [here](https://stefanocovino.github.io/Jspec.jl/stable/).
 
 
 ### Similar tools
@@ -125,7 +125,7 @@ GenResponseMatrix(XRTdt)
 ```
 
 At this point, we need to define a model for our data. This can be expressed by regular `Julia` syntax, although the function 
-arguments should be set up to allow JSPEC to convolve the function results with the response matrices and be able to compare the
+arguments should be set up to allow Jspec to convolve the function results with the response matrices and be able to compare the
  model prediction with the observation.
  
 For instance, with XRT and optical data, it might be something as a simple power-law with local optical and X-ray extinction and absorption:
@@ -148,10 +148,10 @@ Vectors with the observatins, uncertainties and input energies for all the impor
 obs,eobs,engy = GenFullObsData([Optdt,XRTdt])
 ```
 
-Finally, having defined a theoretical model, we can convolve it with the various, possiby rebinned, responce matrices of the imported datasets to obtain model predictions to be compared with the observed data. This can be obtained by means of the `JSPECFunc` function as:
+Finally, having defined a theoretical model, we can convolve it with the various, possiby rebinned, responce matrices of the imported datasets to obtain model predictions to be compared with the observed data. This can be obtained by means of the `JspecFunc` function as:
 
 ```julia
-modpreds = JSPECFunc(pars,[Optdt,XRTdt],MyModel)
+modpreds = JspecFunc(pars,[Optdt,XRTdt],MyModel)
 ```
 
 `JSPECFunc` with the right parameters can be used for any optimization problem or for any Baysian analysis involving sampling, etc.
@@ -166,7 +166,7 @@ For instance, a [`Turing`](https://turinglang.org/) model might look like:
         lNH ~ Uniform(log(1e17), log(1e22))
         EBV ~ Uniform(0,2)
         #
-        ris = JSPECFunc([exp(lN),β,exp(lNH),EBV],[Optdt,XRTdt],MyModel)
+        ris = JspecFunc([exp(lN),β,exp(lNH),EBV],[Optdt,XRTdt],MyModel)
         #
         f ~ MvNormal(ris1,ef)
     end

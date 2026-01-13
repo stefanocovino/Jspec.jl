@@ -1,4 +1,4 @@
-module JSPEC
+module Jspec
 
 using CairoMakie
 using DataFrames
@@ -16,7 +16,7 @@ export GetKnownInstruments
 export IgnoreChannels
 export ImportData
 export ImportOtherData
-export JSPECFunc
+export JspecFunc
 export Jy2PhFlux
 export KeV2Angstrom
 export KeV2Channel
@@ -70,7 +70,7 @@ KnownInstruments = ["Swift-XRT", "Swift-BAT", "SVOM-MXT", "Other", "NuSTAR-FPM",
 """
     CreateDataSet(Name::String, Instrument::String; verbose=true)::Dict
 
-Create a JSPECDataSent entry.
+Create a JspecDataSent entry.
 
 #Arguments
 
@@ -94,7 +94,7 @@ Dict{Any, Any} with 3 entries:
 """
 function CreateDataSet(Name::String, Instrument::String; verbose=true)::Dict
     nd = Dict()
-    if uppercase(Instrument) in [uppercase(i) for i in JSPEC.KnownInstruments]
+    if uppercase(Instrument) in [uppercase(i) for i in Jspec.KnownInstruments]
         nd["Name"]=Name
         nd["Instrument"]=Instrument
         nd["Created"] = true
@@ -131,7 +131,7 @@ Compute the rebin schema to guarantee that the S/N is at least `minSN` in each b
 x = [1.,2.,3.,4.,]
 ex = [0.1,0.5,0.6,0.05]
 
-JSPEC.FindRebinSchema(x,ex)
+Jspec.FindRebinSchema(x,ex)
 
 # output
 
@@ -169,7 +169,7 @@ Gneerate input data basing on the available datasets.
 
 # Arguments
 
-- `datasets` array of JSPEC dictionaries.
+- `datasets` array of Jspec dictionaries.
 - `verbose` enable warning message.
 
 It reports three arrays: inputdata, error on inputdata, input energies.
@@ -234,7 +234,7 @@ Rebin input data following a given rebin schema.
 x = [1.,2.,3.,4.,]
 rbs = [1,3,4]
 
-JSPEC.GenRebin(x,rbs)
+Jspec.GenRebin(x,rbs)
 
 # output
 
@@ -263,7 +263,7 @@ Generate a rebinned response matrix following the rebin schema identified for in
 
 # Arguments
 
-- `ds` JSPEC data set dictionary.
+- `ds` Jspec data set dictionary.
 
 
 # Examples
@@ -289,7 +289,7 @@ function GenResponseMatrix(ds::Dict; verbose=true)
         #
         vt = zeros(length(ds["RebinSchema"]),length(matx))
         for i in 1:size(vt)[2]
-            vt[:,i] = JSPEC.GenRebin(matx[i],ds["RebinSchema"])
+            vt[:,i] = Jspec.GenRebin(matx[i],ds["RebinSchema"])
         end
         ds["RebinnedMaskedRMF"] = vt
         ds["RebinnedResponseMatrix"] = true
@@ -305,7 +305,7 @@ end
 """
     GetKnownInstruments()
 
-Returns the instruments currently supported by the JSPEC package.
+Returns the instruments currently supported by the Jspec package.
 
 
 # Examples
@@ -328,7 +328,7 @@ Ignore channels in the input data.
 
 # Arguments
 
-- `ds` JSPEC data set dictionary.
+- `ds` Jspec data set dictionary.
 - `chns` vector of channels to be ignored,
     e.g. [0,1,2,3] or even [0:4, 1000:1023]. Pay attention that channel numbering starts at 0.
 - `verbose` enables warning messages.
@@ -397,7 +397,7 @@ Import data from "multi-channel" instruments (e.g., Swift-XRT).
 
 # Arguments
 
-- `ds`` JSPEC data set dictionary.
+- `ds`` Jspec data set dictionary.
 - `rmfile`` RMF response matrix.
 - `arffile` effective area matrix.
 - `srcfile` source counts (or rate).
@@ -425,7 +425,7 @@ function ImportData(ds::Dict; rmffile::String="", arffile::String="", srcfile::S
         if verbose
             println("Warning! Use ImportOtherData instead.")
         end
-    elseif uppercase(ds["Instrument"]) ∉ [uppercase(i) for i in JSPEC.KnownInstruments]
+    elseif uppercase(ds["Instrument"]) ∉ [uppercase(i) for i in Jspec.KnownInstruments]
         if verbose
             println("Warning! Unknown intrument.")
         end
@@ -620,7 +620,7 @@ Import data already in physical units.
 
 # Arguments
 
-- `ds` JSPEC dictionary.
+- `ds` Jspec dictionary.
 - `energy` input energy (KeV).
 - `phflux` photon flux density (``photons~cm{^-2}~s{^-1}~KeV{^-1})``.
 - `ephflux` photon flux density uncertainty.
@@ -663,7 +663,7 @@ end
 
 
 """
-    JSPECFunc(pars,dts,inpfnc)
+JspecFunc(pars,dts,inpfnc)
 
 Convolve the output of the `inpfnc` function with the responce matrices of the imported data.
 
@@ -671,7 +671,7 @@ Convolve the output of the `inpfnc` function with the responce matrices of the i
 # Arguments
 
 - `pars` parameters for the `inpfnc` function.
-- `dts` array of JSPEC dictionaries.
+- `dts` array of Jspec dictionaries.
 - `inpfnc` function to model the imported data.
 
 `inpfnc` can be any legal `Julia` function. THe function should be declared as in the following example.
@@ -685,10 +685,10 @@ function Myfunc(pars,Energy)
     return anyfunc(E,N,λ)
 end
 
-JSPECFunc([N,λ], [Optdt,XRTdt], Myfunc)
+JspecFunc([N,λ], [Optdt,XRTdt], Myfunc)
 ```
 """
-function JSPECFunc(pars,dts,inpfnc)
+function JspecFunc(pars,dts,inpfnc)
     res = map(d -> d["RebinnedMaskedRMF"] * (inpfnc(pars,d["Energy"][!,"E"]) .* d["Energy"][!,"ΔE"]), dts)
     return collect(Iterators.flatten(res))
 end
@@ -764,7 +764,7 @@ Convert photon energy (``KeV``) to original detector channel.
 
 #Arguments
 
-- `ds` JSPEC dictionary.
+- `ds` Jspec dictionary.
 - `energy` the input photon energy.
 
 It returns `-1` if the energy is not in the covered range.
@@ -805,7 +805,7 @@ Draw a plot of the raw input data.
 
 # Arguments
 
-- `ds` JSPEC data set dictionary.
+- `ds` Jspec data set dictionary.
 - `xlbl` x-axis label.
 - `ylbl` y-axis label.
 - `tlbl` plot title.
@@ -852,7 +852,7 @@ Draw a plot of the rebinned input data.
 
 # Arguments
 
-- `ds` JSPEC data set dictionary.
+- `ds` Jspec data set dictionary.
 - `xlbl` x-axis label.
 - `ylbl` y-axis label.
 - `tlbl` plot title.
@@ -899,7 +899,7 @@ Rebin ancillary data (channels, channel energy, etc.) with the rebin schema iden
 
 # Arguments
 
-- `ds` JSPEC data set disctionary.
+- `ds` Jspec data set disctionary.
 - `verbose` enables warning messages.
 
 
@@ -917,8 +917,8 @@ function RebinAncillaryData(ds::Dict; verbose=true)
         end
         ds["RebinnedAncillaryData"] = false
     else
-        ds["RebinnedMaskedEnergy"] = JSPEC.GenRebin(ds["MaskedChannels"][!,"E"],ds["RebinSchema"])
-        ds["RebinnedMaskedChannel"] = JSPEC.GenRebin(ds["MaskedChannels"][!,"CHANNEL"],ds["RebinSchema"])
+        ds["RebinnedMaskedEnergy"] = Jspec.GenRebin(ds["MaskedChannels"][!,"E"],ds["RebinSchema"])
+        ds["RebinnedMaskedChannel"] = Jspec.GenRebin(ds["MaskedChannels"][!,"CHANNEL"],ds["RebinSchema"])
         ds["RebinnedAncillaryData"] = true
     end
 end
@@ -932,7 +932,7 @@ Rebin input data with a mininum S/N per bin.
 
 # Arguments
 
-- `ds` JSPEC data set disctionary.
+- `ds` Jspec data set disctionary.
 - `minSN` minimum S/N per bin.
 - `verbose` enables warning messages.
 
@@ -951,7 +951,7 @@ function RebinData(ds::Dict;minSN=5,verbose=true)
         end
         ds["RebinnedData"] = false
     else
-        ds["RebinSchema"] = JSPEC.FindRebinSchema(ds["MaskedInputData"],ds["MaskedInputDataErr"],minSN=minSN)
+        ds["RebinSchema"] = Jspec.FindRebinSchema(ds["MaskedInputData"],ds["MaskedInputDataErr"],minSN=minSN)
         ncts = zeros(Real,length(ds["RebinSchema"]))
         encts = zeros(Real,length(ds["RebinSchema"]))
         old = 1

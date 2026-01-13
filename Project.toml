@@ -1,4 +1,4 @@
-name = "JSPEC"
+name = "Jspec"
 uuid = "799228a4-d83e-4675-bef0-fa04f023a533"
 authors = ["Stefano Covino <stefano.covino@inaf.it> and contributors"]
 version = "1.2.0"

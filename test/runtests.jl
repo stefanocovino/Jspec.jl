@@ -1,8 +1,8 @@
 using CairoMakie
-using JSPEC
+using Jspec
 using Test
 
-@testset "JSPEC.jl" begin
+@testset "Jspec.jl" begin
     # Write your tests here.
     # CreateDataSet
     newdt = CreateDataSet("XRTTest","Swift-XRT")
@@ -29,10 +29,10 @@ using Test
     @test newdt["IgnoredChannels"] == true
     #
     # FindRebinSchema
-    @test JSPEC.FindRebinSchema([1.,2.,3.,4.,],[0.1,0.5,0.6,0.05]) == [1, 3, 4]
+    @test Jspec.FindRebinSchema([1.,2.,3.,4.,],[0.1,0.5,0.6,0.05]) == [1, 3, 4]
     #
     # GenRebin
-    @test JSPEC.GenRebin([1.,2.,3.,4.],[1,3,4]) == [1.0,2.5,4.0]
+    @test Jspec.GenRebin([1.,2.,3.,4.],[1,3,4]) == [1.0,2.5,4.0]
     #
     # RebinData
     RebinData(newdt)
@@ -52,12 +52,12 @@ using Test
     # GenFullObsData
     @test typeof(GenFullObsData([newodt,newdt])) == Tuple{Vector{Float64}, Vector{Float64}, Vector{Float64}}
     #
-    # JSPECFunc
+    # JspecFunc
     function Myfunc(pars,E)
         A,B = pars
         return (A.+B).*E
     end
-    @test JSPECFunc([1.,2.],[newodt,],Myfunc) == [3.0,6.0,9.0,12.0]
+    @test JspecFunc([1.,2.],[newodt,],Myfunc) == [3.0,6.0,9.0,12.0]
     #
     # Angstrom2KeV
     @test Angstrom2KeV(5000:5004) == [0.00248,0.002479504099180164,0.0024790083966413435,0.0024785128922646415,0.0024780175859312552]
