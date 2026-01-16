@@ -1,7 +1,6 @@
 # JSpecAstro
 
 [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://stefanocovino.github.io/JSpecAstro.jl/stable/)
-[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://stefanocovino.github.io/JSpecAstro.jl/dev/)
 [![Build Status](https://github.com/stefanocovino/JSpecAstro.jl/actions/workflows/CI.yml/badge.svg?branch=main)](https://github.com/stefanocovino/JSpecAstro.jl/actions/workflows/CI.yml?query=branch%3Amain)
 
 This is a package to allow to read and analyse spectra obtained from multi-channel instruments (e.g., Swift-XRT) with data from any other source (e.g. optical/NIR observations). Altough several features are in common, no attempt to mimic the full funtionalities offered by [XSPEC](https://heasarc.gsfc.nasa.gov/xanadu/xspec/) was tried. In addition, at present, only fits with a Gaussian likelihood are implemented. Fits in a full Poissonian regime will possibly be included in a future version (or never...). 
